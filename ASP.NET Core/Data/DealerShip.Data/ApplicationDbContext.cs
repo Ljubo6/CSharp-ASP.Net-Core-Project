@@ -24,10 +24,17 @@
         {
         }
 
+<<<<<<< HEAD
         public DbSet<Car> Cars { get; set; }
 
         public DbSet<Setting> Settings { get; set; }
 
+=======
+        public DbSet<Setting> Settings { get; set; }
+
+        public DbSet<Car> Cars { get; set; }
+
+>>>>>>> 0556923ec7b4f1d4a099784c8d86103e1d13a6d5
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)

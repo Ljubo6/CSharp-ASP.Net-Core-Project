@@ -7,8 +7,11 @@
 
     using DealerShip.Data.Common.Repositories;
     using DealerShip.Data.Models;
+<<<<<<< HEAD
     using DealerShip.Services.Mapping;
     using Microsoft.EntityFrameworkCore;
+=======
+>>>>>>> 0556923ec7b4f1d4a099784c8d86103e1d13a6d5
 
     public class CarService : ICarService
     {
@@ -32,6 +35,7 @@
             await this.carRepository.AddAsync(car);
             await this.carRepository.SaveChangesAsync();
         }
+<<<<<<< HEAD
 
         public async Task<IEnumerable<T>> GetAllCars<T>()
         {
@@ -40,5 +44,7 @@
                 .To<T>()
                 .ToArrayAsync();
         }
+=======
+>>>>>>> 0556923ec7b4f1d4a099784c8d86103e1d13a6d5
     }
 }

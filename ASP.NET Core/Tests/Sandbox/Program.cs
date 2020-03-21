@@ -5,7 +5,10 @@
     using System.IO;
     using System.Threading.Tasks;
 
+<<<<<<< HEAD
     using CommandLine;
+=======
+>>>>>>> 0556923ec7b4f1d4a099784c8d86103e1d13a6d5
     using DealerShip.Data;
     using DealerShip.Data.Common;
     using DealerShip.Data.Common.Repositories;
@@ -14,6 +17,12 @@
     using DealerShip.Data.Seeding;
     using DealerShip.Services.Data;
     using DealerShip.Services.Messaging;
+<<<<<<< HEAD
+=======
+
+    using CommandLine;
+
+>>>>>>> 0556923ec7b4f1d4a099784c8d86103e1d13a6d5
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;

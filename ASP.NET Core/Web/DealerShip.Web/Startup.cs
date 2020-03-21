@@ -58,7 +58,10 @@
 
             // Application services
             services.AddTransient<IEmailSender, NullMessageSender>();
+<<<<<<< HEAD
             services.AddTransient<ICarService, CarService>();
+=======
+>>>>>>> 0556923ec7b4f1d4a099784c8d86103e1d13a6d5
             services.AddTransient<ISettingsService, SettingsService>();
         }
 
