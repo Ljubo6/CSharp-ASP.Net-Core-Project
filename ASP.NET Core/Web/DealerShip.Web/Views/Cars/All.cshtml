@@ -1,0 +1,11 @@
+﻿@using DealerShip.Web.ViewModels.Cars.ViewModels
+@model IEnumerable<AllCarsViewModel> 
+@{
+    this.ViewData["Title"] = "All";
+}
+
+@foreach (var item in Model)
+{
+    <h1>@item.Make</h1>
+}
+
