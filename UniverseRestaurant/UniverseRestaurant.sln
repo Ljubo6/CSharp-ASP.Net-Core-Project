@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29911.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniverseRestaurant", "UniverseRestaurant\UniverseRestaurant.csproj", "{572D59AB-7DEB-47A9-B5D7-2B4477A45160}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniverseRestaurant", "UniverseRestaurant\UniverseRestaurant.csproj", "{3F54E2A1-BCD2-4406-945C-DE22B1B6C6E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{572D59AB-7DEB-47A9-B5D7-2B4477A45160}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{572D59AB-7DEB-47A9-B5D7-2B4477A45160}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{572D59AB-7DEB-47A9-B5D7-2B4477A45160}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{572D59AB-7DEB-47A9-B5D7-2B4477A45160}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F54E2A1-BCD2-4406-945C-DE22B1B6C6E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F54E2A1-BCD2-4406-945C-DE22B1B6C6E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F54E2A1-BCD2-4406-945C-DE22B1B6C6E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F54E2A1-BCD2-4406-945C-DE22B1B6C6E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
