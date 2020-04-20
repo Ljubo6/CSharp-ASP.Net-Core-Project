@@ -28,7 +28,7 @@ namespace UniverseRestaurant.Areas.Admin.Controllers
         // GET - CREATE
         public IActionResult Create()
         {
-            return View();
+            return this.View();
         }
 
         //POST - CREATE
@@ -45,7 +45,98 @@ namespace UniverseRestaurant.Areas.Admin.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            return this.View(category);
+        }
+
+        //GET - EDIT
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var category = await this.db.Categories.FindAsync(id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            return this.View(category);
+        }
+
+        // POST - EDIT
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Category category)
+        {
+            if (ModelState.IsValid)
+            {
+                this.db.Update(category);
+
+                await this.db.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return this.View(category);
+        }
+
+
+        //GET - DELETE
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var category = await this.db.Categories.FindAsync(id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            return this.View(category);
+        }
+
+        //POST - DELETE
+        [HttpPost,ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int? id)
+        {
+            var category = await this.db.Categories.FindAsync(id);
+
+            if (category == null)
+            {
+                return this.View();
+            }
+
+            this.db.Categories.Remove(category);
+
+            await this.db.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        //GET - DETAILS
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var category = await this.db.Categories.FindAsync(id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            return this.View(category);
         }
     }
 }
