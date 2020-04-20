@@ -100,7 +100,7 @@
 
 
         function getSubCategory() {
-            var url = '@Url.Content("~/")' + "Admin/SubCategory/GetSubCategory";
+            var url = '@Url.Content("~/")' + "Admin/SubCategories/GetSubCategory";
             var ddlsoruce = '#CategoryId';
             $.getJSON(url, { id: $(ddlsoruce).val() }, function (data) {
                 var items = '';

@@ -21,16 +21,16 @@
         {
             <table class="table table-striped border">
                 <tr class="table-secondary">
-                    <th class="col-6">
+                    <th >
                         @Html.DisplayNameFor(m => m.Name)
                     </th>
-                    <th class="col-6">
+                    <th >
                         @Html.DisplayNameFor(m => m.Price)
                     </th>
-                    <th class="col-6">
+                    <th >
                         @Html.DisplayNameFor(m => m.CategoryId)
                     </th>
-                    <th class="col-6">
+                    <th >
                         @Html.DisplayNameFor(m => m.SubCategoryId)
                     </th>
                     <th></th>
@@ -51,7 +51,7 @@
                     <td>
                         @Html.DisplayFor(m => item.SubCategory.Name)
                     </td>
-                    <td class="col-6 text-right">
+                    <td>
                         <partial name="_TableButtonPartial" model="item.Id" />
                     </td>
                 </tr>
