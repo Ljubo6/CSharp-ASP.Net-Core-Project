@@ -110,9 +110,9 @@ namespace UniverseRestaurant.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var subcategory = await this.db.SubCategories.SingleOrDefaultAsync(m => m.Id == id);
+            var subCategory = await this.db.SubCategories.SingleOrDefaultAsync(m => m.Id == id);
 
-            if (subcategory == null)
+            if (subCategory == null)
             {
                 return NotFound();
             }
@@ -120,7 +120,7 @@ namespace UniverseRestaurant.Areas.Admin.Controllers
             SubCategoryAndCategoryViewModel model = new SubCategoryAndCategoryViewModel()
             {
                 CategoryList = await this.db.Categories.ToListAsync(),
-                SubCategory = subcategory,
+                SubCategory = subCategory,
                 SubCategoryList = await this.db.SubCategories
                                             .OrderBy(p => p.Name)
                                             .Select(p => p.Name)
@@ -155,8 +155,6 @@ namespace UniverseRestaurant.Areas.Admin.Controllers
 
                     subCatFromDb.Name = model.SubCategory.Name;
 
-                    this.db.SubCategories.Add(model.SubCategory);
-
                     await this.db.SaveChangesAsync();
 
                     return RedirectToAction(nameof(Index));
@@ -177,6 +175,53 @@ namespace UniverseRestaurant.Areas.Admin.Controllers
             modelVM.SubCategory.Id = id;
 
             return View(modelVM);
+        }
+        
+        //GET - DETAILS
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var subCategory = await this.db.SubCategories.Include(s => s.Category).SingleOrDefaultAsync(m => m.Id == id);
+            if (subCategory == null)
+            {
+                return NotFound();
+            }
+
+            return this.View(subCategory);
+        }
+
+        //GET - DELETE
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var subCategory = await this.db.SubCategories.Include(s => s.Category).SingleOrDefaultAsync(m => m.Id == id);
+
+            if (subCategory == null)
+            {
+                return NotFound();
+            }
+
+            return this.View(subCategory);
+        }
+
+        //POST - DELETE
+        [HttpPost]
+        [ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var subCategory = await this.db.SubCategories.SingleOrDefaultAsync(m => m.Id == id);
+            this.db.SubCategories.Remove(subCategory);
+            await this.db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
     }
 }
