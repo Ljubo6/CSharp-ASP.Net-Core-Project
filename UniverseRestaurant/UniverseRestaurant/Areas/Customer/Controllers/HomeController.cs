@@ -4,24 +4,33 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using UniverseRestaurant.Data;
 using UniverseRestaurant.Models;
+using UniverseRestaurant.Models.ViewModels;
 
 namespace UniverseRestaurant.Controllers
 {
     [Area("Customer")]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext db;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext db)
         {
-            _logger = logger;
+            this.db = db;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            IndexViewModel IndexVM = new IndexViewModel()
+            {
+                MenuItem = await this.db.MenuItems.Include(m => m.Category).Include(m => m.SubCategory).ToListAsync(),
+                Category = await this.db.Categories.ToListAsync(),
+                Coupon = await this.db.Coupons.Where(c => c.IsActive == true).ToArrayAsync(),
+            };
+            return View(IndexVM);
         }
 
         public IActionResult Privacy()
