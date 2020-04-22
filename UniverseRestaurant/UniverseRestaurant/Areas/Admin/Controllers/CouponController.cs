@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UniverseRestaurant.Data;
 using UniverseRestaurant.Models;
+using UniverseRestaurant.Utility;
 
 namespace UniverseRestaurant.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = StaticDetail.ManagerUser)]
     public class CouponController : Controller
     {
         private readonly ApplicationDbContext db;

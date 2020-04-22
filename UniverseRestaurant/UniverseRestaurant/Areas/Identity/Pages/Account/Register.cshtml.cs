@@ -87,9 +87,10 @@ namespace UniverseRestaurant.Areas.Identity.Pages.Account
         {
             string role = Request.Form["rdUserRole"].ToString();
 
-
             returnUrl = returnUrl ?? Url.Content("~/");
+
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { 
@@ -103,6 +104,7 @@ namespace UniverseRestaurant.Areas.Identity.Pages.Account
                     PhoneNumber = Input.PhoneNumber,
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
                 if (result.Succeeded)
                 {
 
@@ -142,8 +144,18 @@ namespace UniverseRestaurant.Areas.Identity.Pages.Account
                             else
                             {
                                 await _userManager.AddToRoleAsync(user,StaticDetail.CustomerEndUser);
-                                await _signInManager.SignInAsync(user, isPersistent: false);
-                                return LocalRedirect(returnUrl);
+                                //await _signInManager.SignInAsync(user, isPersistent: false);
+                                //return LocalRedirect(returnUrl);
+
+                                if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                                {
+                                    return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
+                                }
+                                else
+                                {
+                                    await _signInManager.SignInAsync(user, isPersistent: false);
+                                    return LocalRedirect(returnUrl);
+                                }
                             }
                         }
                     }
