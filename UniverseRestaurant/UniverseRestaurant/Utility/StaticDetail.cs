@@ -13,7 +13,7 @@ namespace UniverseRestaurant.Utility
 
         public const string ManagerUser = "Manager";
         public const string KitchenUser = "Kitchen";
-        public const string FronDeskUser = "FromDesk";
+        public const string FrontDeskUser = "FrontDesk";
         public const string CustomerEndUser = "Customer";
 
 

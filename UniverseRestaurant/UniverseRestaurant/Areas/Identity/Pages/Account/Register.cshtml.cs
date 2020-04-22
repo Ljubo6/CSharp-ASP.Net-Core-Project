@@ -85,6 +85,9 @@ namespace UniverseRestaurant.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            string role = Request.Form["rdUserRole"].ToString();
+
+
             returnUrl = returnUrl ?? Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
@@ -115,14 +118,39 @@ namespace UniverseRestaurant.Areas.Identity.Pages.Account
                     {
                         await _roleManager.CreateAsync(new IdentityRole(StaticDetail.KitchenUser));
                     }
-                    if (!await _roleManager.RoleExistsAsync(StaticDetail.FronDeskUser))
+                    if (!await _roleManager.RoleExistsAsync(StaticDetail.FrontDeskUser))
                     {
-                        await _roleManager.CreateAsync(new IdentityRole(StaticDetail.FronDeskUser));
+                        await _roleManager.CreateAsync(new IdentityRole(StaticDetail.FrontDeskUser));
                     }
 
-                    await _userManager.AddToRoleAsync(user,StaticDetail.ManagerUser);
+                    if (role == StaticDetail.KitchenUser)
+                    {
+                        await _userManager.AddToRoleAsync(user, StaticDetail.KitchenUser);
+                    }
+                    else
+                    {
+                        if (role == StaticDetail.FrontDeskUser)
+                        {
+                            await _userManager.AddToRoleAsync(user, StaticDetail.FrontDeskUser);
+                        }
+                        else
+                        {
+                            if (role == StaticDetail.ManagerUser)
+                            {
+                                await _userManager.AddToRoleAsync(user, StaticDetail.ManagerUser);
+                            }
+                            else
+                            {
+                                await _userManager.AddToRoleAsync(user,StaticDetail.CustomerEndUser);
+                                await _signInManager.SignInAsync(user, isPersistent: false);
+                                return LocalRedirect(returnUrl);
+                            }
+                        }
+                    }
 
-                    _logger.LogInformation("User created a new account with password.");
+                    return RedirectToAction("Index", "Users", new { area = "Admin" });
+
+                    //_logger.LogInformation("User created a new account with password.");
 
                     //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -135,15 +163,16 @@ namespace UniverseRestaurant.Areas.Identity.Pages.Account
                     //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                     //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
-                    }
-                    else
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
-                    }
+                    //if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                    //{
+                    //    return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
+                    //}
+                    //else
+                    //{
+                    //    await _signInManager.SignInAsync(user, isPersistent: false);
+                    //    return LocalRedirect(returnUrl);
+                    //}
+
                 }
                 foreach (var error in result.Errors)
                 {

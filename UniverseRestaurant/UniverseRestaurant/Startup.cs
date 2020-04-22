@@ -38,14 +38,26 @@ namespace UniverseRestaurant
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddSingleton<IEmailSender, EmailSender>();
-
+            services.AddScoped<IDbInitializer, DbInitializer>();
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDbInitializer dbInitializer)
         {
+
+            using (var scopedService = app.ApplicationServices.CreateScope())
+            {
+                var dbContext = scopedService.ServiceProvider.GetService<ApplicationDbContext>();
+
+                if (env.IsDevelopment())
+                {
+                    dbContext.Database.Migrate();
+                }
+
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -61,6 +73,7 @@ namespace UniverseRestaurant
             app.UseStaticFiles();
 
             app.UseRouting();
+            dbInitializer.Initialize();
 
             app.UseAuthentication();
             app.UseAuthorization();
