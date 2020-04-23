@@ -1,4 +1,6 @@
 ﻿@using UniverseRestaurant.Utility
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor IHttpContextAccessor
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,25 +30,40 @@
                     <ul class="navbar-nav flex-grow-1">
                         @if (User.IsInRole(StaticDetail.ManagerUser))
                         {
-                        <li class="nav-item dropdown" text-white-50>
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropDownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Content Management
-                            </a>
+                            <li class="nav-item dropdown" text-white-50>
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropDownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Content Management
+                                </a>
 
-                            <div class="dropdown-menu" aria-labelledby="navbarDropDownMenuLink">
-                                <a class="dropdown-item" asp-action="Index" asp-controller="Categories" asp-area="Admin">Category</a>
-                                <a class="dropdown-item" asp-action="Index" asp-controller="SubCategories" asp-area="Admin">Sub Category</a>
-                                <a class="dropdown-item" asp-action="Index" asp-controller="MenuItems" asp-area="Admin">MenuItem</a>
-                                <a class="dropdown-item" asp-action="Index" asp-controller="Coupon" asp-area="Admin">Coupons</a>
-                                <a class="dropdown-item"  asp-action="Index" asp-controller="Users" asp-area="Admin">Users</a>
-                            </div>
-                        </li>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropDownMenuLink">
+                                    <a class="dropdown-item" asp-action="Index" asp-controller="Categories" asp-area="Admin">Category</a>
+                                    <a class="dropdown-item" asp-action="Index" asp-controller="SubCategories" asp-area="Admin">Sub Category</a>
+                                    <a class="dropdown-item" asp-action="Index" asp-controller="MenuItems" asp-area="Admin">MenuItem</a>
+                                    <a class="dropdown-item" asp-action="Index" asp-controller="Coupon" asp-area="Admin">Coupons</a>
+                                    <a class="dropdown-item" asp-action="Index" asp-controller="Users" asp-area="Admin">Users</a>
+                                </div>
+                            </li>
                         }
-                        <li style="color:white">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-shopping-cart"></i> &nbsp; (0)
-                            </a>
-                        </li>
+
+                        @if (IHttpContextAccessor.HttpContext.Session.GetInt32("StaticDetail.ssShoppingCartCount") != null)
+                        {
+                            <li style="color:white">
+                                <a href="#" class="nav-link">
+                                    @{
+                                        var count = IHttpContextAccessor.HttpContext.Session.GetInt32("StaticDetail.ssShoppingCartCount");
+                                    }
+                                    <i class="fas fa-shopping-cart"></i> &nbsp; (@count)
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li style="color:white">
+                                <a href="#" class="nav-link">
+                                    <i class="fas fa-shopping-cart"></i> &nbsp; (0)
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

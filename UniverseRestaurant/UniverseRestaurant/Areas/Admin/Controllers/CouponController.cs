@@ -41,7 +41,7 @@ namespace UniverseRestaurant.Areas.Admin.Controllers
             {
                 var files = HttpContext.Request.Form.Files;
 
-                if (files.Count > 0)
+                if (files.Count > 0 && files != null)
                 {
                     byte[] picture1 = null;
                     using (var fileStream1 = files[0].OpenReadStream())
@@ -98,7 +98,7 @@ namespace UniverseRestaurant.Areas.Admin.Controllers
             {
                 var files = HttpContext.Request.Form.Files;
 
-                if (files.Count > 0)
+                if (files.Count > 0 && files != null)
                 {
                     byte[] picture1 = null;
                     using (var fileStream1 = files[0].OpenReadStream())

@@ -5,6 +5,11 @@
     <UserSecretsId>aspnet-UniverseRestaurant-08319BAA-7367-4947-BC2A-D00AACA3E47F</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20200423072255_changePictureRequired.cs" />
+    <Compile Remove="Data\Migrations\20200423072255_changePictureRequired.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.2" />

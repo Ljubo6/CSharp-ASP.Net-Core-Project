@@ -19,6 +19,7 @@ namespace UniverseRestaurant.Data
         public DbSet<MenuItem> MenuItems { get; set; }
         public DbSet<Coupon> Coupons { get; set; }
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<ShoppingCart> ShoppingCart { get; set; }
 
     }
 }
