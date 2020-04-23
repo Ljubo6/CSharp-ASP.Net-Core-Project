@@ -8,6 +8,8 @@
   <ItemGroup>
     <Compile Remove="Data\Migrations\20200423072255_changePictureRequired.cs" />
     <Compile Remove="Data\Migrations\20200423072255_changePictureRequired.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200423201504_AddOrderHeadersAndDetailsToDb.cs" />
+    <Compile Remove="Data\Migrations\20200423201504_AddOrderHeadersAndDetailsToDb.Designer.cs" />
   </ItemGroup>
 
 

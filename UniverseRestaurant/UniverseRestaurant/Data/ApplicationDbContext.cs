@@ -20,6 +20,8 @@ namespace UniverseRestaurant.Data
         public DbSet<Coupon> Coupons { get; set; }
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<ShoppingCart> ShoppingCart { get; set; }
+        public DbSet<OrderHeader> OrderHeader { get; set; }
+        public DbSet<OrderDetails> OrderDetails { get; set; }
 
     }
 }
