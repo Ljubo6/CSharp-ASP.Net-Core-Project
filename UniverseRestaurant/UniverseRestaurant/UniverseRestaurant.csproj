@@ -10,6 +10,12 @@
     <Compile Remove="Data\Migrations\20200423072255_changePictureRequired.Designer.cs" />
     <Compile Remove="Data\Migrations\20200423201504_AddOrderHeadersAndDetailsToDb.cs" />
     <Compile Remove="Data\Migrations\20200423201504_AddOrderHeadersAndDetailsToDb.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200423205919_changeMenuItemPriceToDecimal.cs" />
+    <Compile Remove="Data\Migrations\20200423205919_changeMenuItemPriceToDecimal.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200423210118_changeMenuItemPriceToDecimal.cs" />
+    <Compile Remove="Data\Migrations\20200423210118_changeMenuItemPriceToDecimal.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200423210848_changeMenuItemPriceToDecimal.cs" />
+    <Compile Remove="Data\Migrations\20200423210848_changeMenuItemPriceToDecimal.Designer.cs" />
   </ItemGroup>
 
 
@@ -20,7 +26,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.2" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
   </ItemGroup>
 
 
