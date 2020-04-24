@@ -8,8 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - UniverseRestaurant</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/jquery-ui.css" />
 </head>
 <body class="search-background">
     <header>
@@ -45,12 +47,12 @@
                             </li>
                         }
 
-                        @if (IHttpContextAccessor.HttpContext.Session.GetInt32("StaticDetail.ssShoppingCartCount") != null)
+                        @if (IHttpContextAccessor.HttpContext.Session.GetInt32(@StaticDetail.ssShoppingCartCount) != null && IHttpContextAccessor.HttpContext.Session.GetInt32(@StaticDetail.ssShoppingCartCount) != 0)
                         {
                             <li style="color:white">
                                 <a asp-area="Customer" asp-controller="Cart" asp-action="Index" class="nav-link">
                                     @{
-                                        var count = IHttpContextAccessor.HttpContext.Session.GetInt32("StaticDetail.ssShoppingCartCount");
+                                        var count = IHttpContextAccessor.HttpContext.Session.GetInt32(@StaticDetail.ssShoppingCartCount);
                                     }
                                     <i class="fas fa-shopping-cart"></i> &nbsp; (@count)
                                 </a>
@@ -83,7 +85,12 @@
     <script src="https://cdn.tiny.cloud/1/28smlk9w9woy8bm88t24zhnw4zh6551tg4mohidlb3t6lus8/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/jquery-ui.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

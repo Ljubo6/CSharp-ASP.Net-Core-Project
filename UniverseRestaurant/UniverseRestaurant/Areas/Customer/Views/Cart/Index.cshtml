@@ -67,7 +67,7 @@
                                         <button type="submit" class="btn btn-sm form-control btn-outline-success" id="btnCoupon" asp-action="AddCoupon">
                                             Apply
                                         </button>
-                                        <button type="submit" class="btn btn-sm form-control btn-outline-danger" style="display:none" id="btnRemoveCoupon" asp-action="AddCoupon">
+                                        <button type="submit" class="btn btn-sm form-control btn-outline-danger" style="display:none" id="btnRemoveCoupon" asp-action="RemoveCoupon">
                                             Remove
                                         </button>
                                     </div>
@@ -100,7 +100,8 @@
 </form>
 
 @section Scripts{
-    <script>$(function () {
+    <script>
+        $(function () {
             var couponCode = document.getElementById("txtCouponCode").value;
 
             if (couponCode.length > 0) {
@@ -111,6 +112,7 @@
                 document.getElementById('btnCoupon').style.display = '';
                 document.getElementById('btnRemoveCoupon').style.display = 'none';
             }
-        });</script>
+        });
+    </script>
 }
 

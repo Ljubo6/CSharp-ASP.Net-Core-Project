@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using UniverseRestaurant.Data;
 using UniverseRestaurant.Models;
 using UniverseRestaurant.Models.ViewModels;
+using UniverseRestaurant.Utility;
 
 namespace UniverseRestaurant.Controllers
 {
@@ -33,6 +34,16 @@ namespace UniverseRestaurant.Controllers
                 Category = await this.db.Categories.ToListAsync(),
                 Coupon = await this.db.Coupons.Where(c => c.IsActive == true).ToArrayAsync(),
             };
+
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (claim != null)
+            {
+                var cnt = this.db.ShoppingCart.Where(u => u.ApplicationUserId == claim.Value).ToList().Count;
+                HttpContext.Session.SetInt32(StaticDetail.ssShoppingCartCount, cnt);
+            }
+
             return View(IndexVM);
         }
 
@@ -58,7 +69,7 @@ namespace UniverseRestaurant.Controllers
             if (claim != null)
             {
                 var count = this.db.ShoppingCart.Where(u => u.ApplicationUserId == claim.Value).ToList().Count();
-                HttpContext.Session.SetInt32("StaticDetail.ssShoppingCartCount",count);
+                HttpContext.Session.SetInt32(StaticDetail.ssShoppingCartCount,count);
             }
 
             return this.View(cartObj);
@@ -94,7 +105,7 @@ namespace UniverseRestaurant.Controllers
 
                 var count = this.db.ShoppingCart.Where(c => c.ApplicationUserId == CartObject.ApplicationUserId).ToList().Count();
 
-                HttpContext.Session.SetInt32("StaticDetail.ssShoppingCartCount",count);
+                HttpContext.Session.SetInt32(StaticDetail.ssShoppingCartCount,count);
 
                 return RedirectToAction("Index");
             }
