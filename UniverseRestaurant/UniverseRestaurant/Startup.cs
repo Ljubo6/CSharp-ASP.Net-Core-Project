@@ -14,6 +14,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using UniverseRestaurant.Services;
+using UniverseRestaurant.Utility;
+using Stripe;
+using System.Configuration;
 
 namespace UniverseRestaurant
 {
@@ -46,6 +49,8 @@ namespace UniverseRestaurant
                 .AddRoles<IdentityRole>()
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
 
             services.AddSingleton<IEmailSender, EmailSender>();
             services.AddScoped<IDbInitializer, DbInitializer>();
@@ -91,6 +96,9 @@ namespace UniverseRestaurant
             app.UseSession();
 
             app.UseRouting();
+
+            StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
+
             dbInitializer.Initialize();
 
             app.UseAuthentication();

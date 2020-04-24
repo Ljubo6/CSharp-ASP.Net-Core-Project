@@ -1,4 +1,7 @@
 ﻿@model UniverseRestaurant.Models.ViewModels.OrderDetailsCart
+@using Microsoft.Extensions.Options
+
+@inject IOptions<UniverseRestaurant.Utility.StripeSettings> Stripe
 @{
     ViewData["Title"] = "Index";
 }
@@ -110,13 +113,13 @@
                         <div class="row">
                             <div class="col-12 col-md-4 offset-md-8">
 
-                                @*@{
+                                @{
                                     var OrderTotalForStrip = Model.OrderHeader.OrderTotal * 100;
                                 }
                                 <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                                         data-key="@Stripe.Value.PublishableKey"
                                         data-amount="@OrderTotalForStrip"
-                                        data-name="Spice Restaurant"
+                                        data-name="Universe Restaurant"
                                         data-label="Place Order"
                                         data-description="Good Food, Good Mood."
                                         data-locale="auto"
@@ -125,7 +128,7 @@
                                 </script>
                                 <script>
                                     document.getElementsByClassName("stripe-button-el")[0].style.display = 'none';
-                                </script>*@
+                                </script>
                                 <button type="submit" id="btnPlaceOrder" onclick="return validateInput()" value="Place Order" class="btn btn-success form-control">Place Order</button>
                             </div>
                         </div>

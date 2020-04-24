@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 using UniverseRestaurant.Data;
 using UniverseRestaurant.Models;
 using UniverseRestaurant.Models.ViewModels;
@@ -116,6 +117,107 @@ namespace UniverseRestaurant.Areas.Customer.Controllers
             }
 
             return View(detailCart);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("Summary")]
+        public async Task<IActionResult> SummaryPost(string stripeToken)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            detailCart.listCart = await this.db.ShoppingCart.Where(c => c.ApplicationUserId == claim.Value).ToListAsync();
+
+            detailCart.OrderHeader.PaymentStatus = StaticDetail.PaymentStatusPending;            
+            detailCart.OrderHeader.OrderDate = DateTime.Now;            
+            detailCart.OrderHeader.UserId = claim.Value;            
+            detailCart.OrderHeader.Status = StaticDetail.PaymentStatusPending;            
+            detailCart.OrderHeader.PickUpTime = Convert.ToDateTime(detailCart.OrderHeader.PickUpDate.ToShortDateString() + " " + detailCart.OrderHeader.PickUpTime.ToShortTimeString());
+
+            List<OrderDetails> orderDetailsList = new List<OrderDetails>();
+
+            this.db.OrderHeader.Add(detailCart.OrderHeader);
+
+            await this.db.SaveChangesAsync();
+
+            detailCart.OrderHeader.OrderTotalOriginal = 0;
+
+            foreach (var item in detailCart.listCart)
+            {
+                item.MenuItem = await this.db.MenuItems.FirstOrDefaultAsync(m => m.Id == item.MenuItemId);
+                OrderDetails orderDetails = new OrderDetails
+                {
+                    MenuItemId = item.MenuItemId,
+                    OrderId = detailCart.OrderHeader.Id,
+                    Description = item.MenuItem.Description,
+                    Name = item.MenuItem.Name,
+                    Price = (decimal)item.MenuItem.Price,
+                    Count = item.Count
+                };
+
+                detailCart.OrderHeader.OrderTotalOriginal += orderDetails.Count * orderDetails.Price;
+
+                this.db.OrderDetails.Add(orderDetails);
+            }
+            
+            if (HttpContext.Session.GetString(StaticDetail.ssCouponCode) != null)
+            {
+                detailCart.OrderHeader.CouponCode = HttpContext.Session.GetString(StaticDetail.ssCouponCode);
+                var couponFromDb = await this.db.Coupons.Where(c => c.Name.ToLower() == detailCart.OrderHeader.CouponCode.ToLower()).FirstOrDefaultAsync();
+
+                detailCart.OrderHeader.OrderTotal = (decimal)StaticDetail.DiscountedPrice(couponFromDb, detailCart.OrderHeader.OrderTotalOriginal);
+            }
+            else
+            {
+                detailCart.OrderHeader.OrderTotal = detailCart.OrderHeader.OrderTotalOriginal;
+            }
+
+            detailCart.OrderHeader.CouponCodeDiscount = detailCart.OrderHeader.OrderTotalOriginal - detailCart.OrderHeader.OrderTotalOriginal;
+
+            await this.db.SaveChangesAsync();
+
+            this.db.ShoppingCart.RemoveRange(detailCart.listCart);
+
+            HttpContext.Session.SetInt32(StaticDetail.ssShoppingCartCount,0);
+
+            await this.db.SaveChangesAsync();
+
+            var options = new ChargeCreateOptions
+            {
+                Amount = Convert.ToInt32(detailCart.OrderHeader.OrderTotal * 100),
+                Currency = "usd",
+                Description = "Orders ID : " + detailCart.OrderHeader.Id,
+                Source = stripeToken,
+            };
+
+            var service = new ChargeService();
+            Charge charge = service.Create(options);
+
+            if (charge.BalanceTransactionId == null)
+            {
+                detailCart.OrderHeader.PaymentStatus = StaticDetail.PaymentStatusRejected;
+            }
+            else
+            {
+                detailCart.OrderHeader.TransactionId = charge.BalanceTransactionId;
+            }
+
+            if (charge.Status.ToLower() == "succeeded")
+            {
+                detailCart.OrderHeader.PaymentStatus = StaticDetail.PaymentStatusApproved;
+                detailCart.OrderHeader.Status = StaticDetail.StatusSubmitted;
+            }
+            else
+            {
+                detailCart.OrderHeader.PaymentStatus = StaticDetail.PaymentStatusRejected;
+            }
+
+            await this.db.SaveChangesAsync();
+
+            return RedirectToAction("Index","Home");
+            //return RedirectToAction("Confirm","Order",new { id = detailCart.OrderHeader.Id});
         }
 
 
