@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -216,8 +217,8 @@ namespace UniverseRestaurant.Areas.Customer.Controllers
 
             await this.db.SaveChangesAsync();
 
-            return RedirectToAction("Index","Home");
-            //return RedirectToAction("Confirm","Order",new { id = detailCart.OrderHeader.Id});
+            //return RedirectToAction("Index","Home");
+            return RedirectToAction("Confirm","Order",new { id = detailCart.OrderHeader.Id});
         }
 
 
@@ -284,6 +285,6 @@ namespace UniverseRestaurant.Areas.Customer.Controllers
             HttpContext.Session.SetInt32(StaticDetail.ssShoppingCartCount, ctn);
 
             return RedirectToAction(nameof(Index));
-        }
+        }       
     }
 }
