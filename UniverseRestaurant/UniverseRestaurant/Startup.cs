@@ -18,6 +18,7 @@ using UniverseRestaurant.Utility;
 using Stripe;
 using System.Configuration;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.Facebook;
 
 namespace UniverseRestaurant
 {
@@ -63,7 +64,12 @@ namespace UniverseRestaurant
             services.AddScoped<IDbInitializer, DbInitializer>();
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
+            services.AddAuthentication().AddFacebook(FacebookOptions =>
+            {
+                FacebookOptions.AppId = "231521558106057";
+                FacebookOptions.AppSecret = "8f42e6c63435a6be36676d8c6e531041";
 
+            });
             services.AddSession(options => {
                 options.Cookie.IsEssential = true;
                 options.IdleTimeout = TimeSpan.FromMinutes(30);

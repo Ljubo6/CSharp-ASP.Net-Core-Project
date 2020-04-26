@@ -71,5 +71,42 @@ namespace UniverseRestaurant.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        //GET - DELETE
+        public async Task<IActionResult> Delete(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await this.db.Users.FindAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return this.View(user);
+        }
+
+        //POST - DELETE
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(string id)
+        {
+            var user = await this.db.Users.FindAsync(id);
+
+            if (user == null)
+            {
+                return this.View();
+            }
+
+            this.db.Users.Remove(user);
+
+            await this.db.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
