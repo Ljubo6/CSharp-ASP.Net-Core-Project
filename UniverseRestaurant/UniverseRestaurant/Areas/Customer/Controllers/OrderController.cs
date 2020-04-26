@@ -41,6 +41,16 @@ namespace UniverseRestaurant.Areas.Customer.Controllers
 
             return this.View(orderDetailsViewModel);
         }
+        public async Task<IActionResult> ConfirmPickup(int Id)
+        {
+            OrderDetailsViewModel orderDetailsViewModel = new OrderDetailsViewModel()
+            {
+                OrderHeader = await this.db.OrderHeader.Include(el => el.ApplicationUser).FirstOrDefaultAsync(m => m.Id == Id),
+                OrderDetails = await this.db.OrderDetails.Where(m => m.OrderId == Id).ToListAsync()
+            };
+
+            return this.View(orderDetailsViewModel);
+        }
         public IActionResult Index()
         {
             return View();
@@ -48,8 +58,9 @@ namespace UniverseRestaurant.Areas.Customer.Controllers
 
         public IActionResult GetOrderStatus(int Id)
         {
-            return PartialView("_OrderStatus", this.db.OrderHeader.Where(m => m.Id == Id).FirstOrDefault().Status);
-
+            var status = this.db.OrderHeader.Where(m => m.Id == Id).FirstOrDefault().Status;
+            ViewBag.Status = status;
+            return this.View();
         }
 
         [Authorize]
@@ -124,10 +135,7 @@ namespace UniverseRestaurant.Areas.Customer.Controllers
                 OrderHeader = await this.db.OrderHeader.Include(el => el.ApplicationUser).FirstOrDefaultAsync(m => m.Id == Id),
                 OrderDetails = await this.db.OrderDetails.Where(m => m.OrderId == Id).ToListAsync()
             };
-
-            //orderDetailsViewModel.OrderHeader.ApplicationUser = await this.db.ApplicationUser.FirstOrDefaultAsync(u => u.Id == orderDetailsViewModel.OrderHeader.UserId);
-
-            return PartialView("_IndividualOrderDetails",orderDetailsViewModel);
+            return this.View(orderDetailsViewModel);
         }
 
         [Authorize(Roles = StaticDetail.KitchenUser + "," + StaticDetail.ManagerUser)]

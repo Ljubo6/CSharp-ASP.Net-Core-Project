@@ -45,37 +45,34 @@
                 </tr>
                 @foreach (var item in Model.Orders)
                 {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(m => item.OrderHeader.Id)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(m => item.OrderHeader.PickUpName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(m => item.OrderHeader.ApplicationUser.Email)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(m => item.OrderHeader.PickUpTime)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(m => item.OrderHeader.OrderTotal)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(m => item.OrderDetails.Count)
-                        </td>
-                        <td>
-                            <button type="submit" class="btn btn-success anchorDetail" data-id="@item.OrderHeader.Id" data-toggle="modal">
-                                <i class="far fa-list-alt"></i> Details
-                            </button>
-                            @if (item.OrderHeader.Status == StaticDetail.StatusSubmitted || item.OrderHeader.Status == StaticDetail.StatusInProcess || item.OrderHeader.Status == StaticDetail.StatusCompleted || item.OrderHeader.Status == StaticDetail.StatusReady)
-                            {
-                                <button type="button" class="btn btn-info btnOrderStatus" data-id="@item.OrderHeader.Id" data-toggle="modal">
-                                    <i class="far fa-clock"></i> Status
-                                </button>
-                            }
-                        </td>
-                    </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => item.OrderHeader.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => item.OrderHeader.PickUpName)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => item.OrderHeader.ApplicationUser.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => item.OrderHeader.PickUpTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => item.OrderHeader.OrderTotal)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => item.OrderDetails.Count)
+                </td>
+                <td>
+                    <a asp-action="GetOrderDetails" asp-controller="Order" asp-route-id="@item.OrderHeader.Id" class="btn btn-success"><i class="far fa-list-alt"></i> Details</a>
+
+                    @if (item.OrderHeader.Status == StaticDetail.StatusSubmitted || item.OrderHeader.Status == StaticDetail.StatusInProcess || item.OrderHeader.Status == StaticDetail.StatusCompleted || item.OrderHeader.Status == StaticDetail.StatusReady)
+                    {
+                        <a asp-action="GetOrderStatus" asp-controller="Order" asp-route-id="@item.OrderHeader.Id" class="btn btn-info "><i class="far fa-clock"></i> Status</a>
+                    }
+                </td>
+            </tr>
                 }
             </table>
             <div page-model="@Model.PagingInfo" page-classes-enabled="true" page-class="btn border"
@@ -120,60 +117,3 @@
         </div>
     </div>
 </div>
-
-
-@section scripts
-    {
-    <script src="~/js/jquery-ui.js"></script>
-    <script>
-        
-        var PostBackURL = '/Customer/Order/GetOrderDetails';
-        var OrderStatusURL = '/Customer/Order/GetOrderStatus';
-
-        $(function () {
-            $(".anchorDetail").click(function () {
-
-                var $buttonClicked = $(this);
-                var id = $buttonClicked.attr('data-id');
-
-                $.ajax({
-                    type: "GET",
-                    url: PostBackURL,
-                    contentType: "application/json; charset=utf-8",
-                    data: { "Id": id },
-                    cache: false,
-                    dataType: "json",
-                    success: function (data) {
-                        $('#myModalContent').html(data);
-                        $('#myModal').modal('show');
-                    },
-                    error: function () {
-                        alert("Dynamic content load failed");
-                    }
-                });
-
-            });
-
-            $(".btnOrderStatus").click(function () {
-                var $buttonClicked = $(this);
-                var id = $buttonClicked.attr('data-id');
-                $.ajax({
-                    type: "GET",
-                    url: OrderStatusURL,
-                    contentType: "text/html; charset=utf-8",
-                    data: { "Id": id },
-                    cache: false,
-                    dataType: "json",
-                    success: function (data) {
-                        $('#myOrderStatusContent').html(data);
-                        $('#myOrderStatus').modal('show');
-
-                    },
-                    error: function () {
-                        alert("Dynamic content load failed.");
-                    }
-                });
-            });
-        });
-    </script>
-}
