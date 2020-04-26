@@ -47,12 +47,32 @@
                             </li>
                         }
 
-                        @if (User.IsInRole(StaticDetail.ManagerUser) || User.IsInRole(StaticDetail.CustomerEndUser))
+                        @if (User.IsInRole(StaticDetail.ManagerUser) || User.IsInRole(StaticDetail.CustomerEndUser) || User.IsInRole(StaticDetail.FrontDeskUser) || User.IsInRole(StaticDetail.KitchenUser))
                         {
                             <li class="nav-item">
                                 <a asp-area="Customer" asp-controller="Order" asp-action="OrderHistory" class="nav-link">
                                     Order History
                                 </a>
+                            </li>
+                        }
+
+                        @if (User.IsInRole(StaticDetail.FrontDeskUser) || User.IsInRole(StaticDetail.KitchenUser) || User.IsInRole(StaticDetail.ManagerUser))
+                        {
+                            <li class="nav-item dropdown text-white-50">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Order
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropDownMenuLink">
+                                    @if (User.IsInRole(StaticDetail.KitchenUser) || User.IsInRole(StaticDetail.ManagerUser))
+                                    {
+                                        <a class="dropdown-item" asp-action="ManageOrder" asp-controller="Order" asp-area="Customer">Manage Order</a>
+                                    }
+                                    @if (User.IsInRole(StaticDetail.FrontDeskUser) || User.IsInRole(StaticDetail.ManagerUser))
+                                    {
+                                        <a class="dropdown-item" asp-action="OrderPickup" asp-controller="Order" asp-area="Customer">Order Pickup</a>
+                                    }
+                                </div>
+
                             </li>
                         }
 
@@ -76,30 +96,32 @@
                             </li>
                         }
                     </ul>
-                </div>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+            <div class="container">
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top pl-3 footer text-white-50" style="background-color:#343a40;">
-        <div class="container">
-            &copy; 2020 - UniverseRestaurant
-        </div>
-    </footer>
-    <script src="https://cdn.tiny.cloud/1/28smlk9w9woy8bm88t24zhnw4zh6551tg4mohidlb3t6lus8/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+            <footer class="border-top pl-3 footer text-white-50" style="background-color:#343a40;">
+                <div class="container">
+                    &copy; 2020 - UniverseRestaurant
+                </div>
+            </footer>
+            <script src="https://cdn.tiny.cloud/1/28smlk9w9woy8bm88t24zhnw4zh6551tg4mohidlb3t6lus8/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+            <script src="~/lib/jquery/dist/jquery.min.js"></script>
+            <script src="~/lib/jquery/dist/jquery.js"></script>
+            <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="~/js/jquery-ui.js"></script>
 
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+            <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+            <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/jquery-ui.js"></script>
-    @RenderSection("Scripts", required: false)
-</body>
-</html>
+            <script src="~/js/site.js" asp-append-version="true"></script>
+
+            @RenderSection("Scripts", required: false)
+        </body>
+    </html>
