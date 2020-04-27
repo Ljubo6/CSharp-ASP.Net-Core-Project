@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
@@ -20,13 +21,15 @@ namespace UniverseRestaurant.Areas.Customer.Controllers
     public class CartController : Controller
     {
         private readonly ApplicationDbContext db;
+        private readonly IEmailSender emailSender;
 
         [BindProperty]
         public OrderDetailsCart detailCart { get; set; }
 
-        public CartController(ApplicationDbContext db)
+        public CartController(ApplicationDbContext db,IEmailSender emailSender)
         {
             this.db = db;
+            this.emailSender = emailSender;
         }
         public async Task<IActionResult> Index()
         {
@@ -207,6 +210,8 @@ namespace UniverseRestaurant.Areas.Customer.Controllers
 
             if (charge.Status.ToLower() == "succeeded")
             {
+                await this.emailSender.SendEmailAsync(this.db.Users.Where(u => u.Id == claim.Value).FirstOrDefault().Email,"UniverseRestaurant - Order Created " + detailCart.OrderHeader.Id.ToString(),"Order has been submitted siccessfuly.");
+
                 detailCart.OrderHeader.PaymentStatus = StaticDetail.PaymentStatusApproved;
                 detailCart.OrderHeader.Status = StaticDetail.StatusSubmitted;
             }
