@@ -11,40 +11,28 @@ namespace UniverseRestaurant.Data
 {
     public class DbInitializer : IDbInitializer
     {
-        private readonly ApplicationDbContext _db;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ApplicationDbContext db;
+        private readonly UserManager<IdentityUser> userManager;
+        private readonly RoleManager<IdentityRole> roleManager;
 
         public DbInitializer(ApplicationDbContext db, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            _db = db;
-            _roleManager = roleManager;
-            _userManager = userManager;
+            this.db = db;
+            this.roleManager = roleManager;
+            this.userManager = userManager;
         }
 
 
         public async void Initialize()
         {
-            try
-            {
-                if(_db.Database.GetPendingMigrations().Count()>0)
-                {
-                    _db.Database.Migrate();
-                }
-            }
-            catch (Exception ex)
-            {
+            if (this.db.Roles.Any(r => r.Name == StaticDetail.ManagerUser)) return;
 
-            }
+            this.roleManager.CreateAsync(new IdentityRole(StaticDetail.ManagerUser)).GetAwaiter().GetResult();
+            this.roleManager.CreateAsync(new IdentityRole(StaticDetail.FrontDeskUser)).GetAwaiter().GetResult();
+            this.roleManager.CreateAsync(new IdentityRole(StaticDetail.KitchenUser)).GetAwaiter().GetResult();
+            this.roleManager.CreateAsync(new IdentityRole(StaticDetail.CustomerEndUser)).GetAwaiter().GetResult();
 
-            if (_db.Roles.Any(r => r.Name == StaticDetail.ManagerUser)) return;
-
-            _roleManager.CreateAsync(new IdentityRole(StaticDetail.ManagerUser)).GetAwaiter().GetResult();
-            _roleManager.CreateAsync(new IdentityRole(StaticDetail.FrontDeskUser)).GetAwaiter().GetResult();
-            _roleManager.CreateAsync(new IdentityRole(StaticDetail.KitchenUser)).GetAwaiter().GetResult();
-            _roleManager.CreateAsync(new IdentityRole(StaticDetail.CustomerEndUser)).GetAwaiter().GetResult();
-
-            _userManager.CreateAsync(new ApplicationUser
+            this.userManager.CreateAsync(new ApplicationUser
             {
                 UserName = "admin@gmail.com",
                 Email = "admin@gmail.com",
@@ -53,9 +41,9 @@ namespace UniverseRestaurant.Data
                 PhoneNumber = "0888261853"
             }, "Admin123*").GetAwaiter().GetResult();
 
-            IdentityUser user = await _db.Users.FirstOrDefaultAsync(u => u.Email == "admin@gmail.com");
+            IdentityUser user = await this.db.Users.FirstOrDefaultAsync(u => u.Email == "admin@gmail.com");
 
-            await _userManager.AddToRoleAsync(user, StaticDetail.ManagerUser);
+            await this.userManager.AddToRoleAsync(user, StaticDetail.ManagerUser);
 
         }
 

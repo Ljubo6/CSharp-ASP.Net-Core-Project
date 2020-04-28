@@ -19,6 +19,7 @@ using Stripe;
 using System.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.Facebook;
+using UniverseRestaurant.SeedData;
 
 namespace UniverseRestaurant
 {
@@ -71,7 +72,8 @@ namespace UniverseRestaurant
                 FacebookOptions.AppSecret = "8f42e6c63435a6be36676d8c6e531041";
 
             });
-            services.AddSession(options => {
+            services.AddSession(options =>
+            {
                 options.Cookie.IsEssential = true;
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
@@ -91,6 +93,14 @@ namespace UniverseRestaurant
                     dbContext.Database.Migrate();
                 }
 
+                new CategorySeeder(scopedService.ServiceProvider, dbContext)
+                    .SeedDataAsync()
+                    .GetAwaiter()
+                    .GetResult();
+                new SubCategorySeeder(scopedService.ServiceProvider, dbContext)
+                    .SeedDataAsync()
+                    .GetAwaiter()
+                    .GetResult();
             }
 
             if (env.IsDevelopment())
