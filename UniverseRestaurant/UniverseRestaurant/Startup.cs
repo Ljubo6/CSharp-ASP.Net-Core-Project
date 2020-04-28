@@ -59,7 +59,7 @@ namespace UniverseRestaurant
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
-            services.AddSingleton<IEmailSender, EmailSender>();
+            services.AddSingleton<IMailSender, EmailSender>();
             services.Configure<EmailOptions>(Configuration);
 
             services.AddScoped<IDbInitializer, DbInitializer>();

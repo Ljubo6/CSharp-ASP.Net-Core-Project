@@ -13,6 +13,7 @@ using Stripe;
 using UniverseRestaurant.Data;
 using UniverseRestaurant.Models;
 using UniverseRestaurant.Models.ViewModels;
+using UniverseRestaurant.Services;
 using UniverseRestaurant.Utility;
 
 namespace UniverseRestaurant.Areas.Customer.Controllers
@@ -21,12 +22,12 @@ namespace UniverseRestaurant.Areas.Customer.Controllers
     public class CartController : Controller
     {
         private readonly ApplicationDbContext db;
-        private readonly IEmailSender emailSender;
+        private readonly IMailSender emailSender;
 
         [BindProperty]
         public OrderDetailsCart detailCart { get; set; }
 
-        public CartController(ApplicationDbContext db,IEmailSender emailSender)
+        public CartController(ApplicationDbContext db, IMailSender emailSender)
         {
             this.db = db;
             this.emailSender = emailSender;
@@ -210,7 +211,7 @@ namespace UniverseRestaurant.Areas.Customer.Controllers
 
             if (charge.Status.ToLower() == "succeeded")
             {
-                await this.emailSender.SendEmailAsync(this.db.Users.Where(u => u.Id == claim.Value).FirstOrDefault().Email,"UniverseRestaurant - Order Created " + detailCart.OrderHeader.Id.ToString(),"Order has been submitted siccessfuly.");
+                this.emailSender.SendEmailAsync(this.db.Users.Where(u => u.Id == claim.Value).FirstOrDefault().Email,"UniverseRestaurant - Order Created " + detailCart.OrderHeader.Id.ToString(),"Order has been submitted siccessfuly.");
 
                 detailCart.OrderHeader.PaymentStatus = StaticDetail.PaymentStatusApproved;
                 detailCart.OrderHeader.Status = StaticDetail.StatusSubmitted;

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
+using MimeKit;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;
@@ -11,42 +12,29 @@ using System.Threading.Tasks;
 
 namespace UniverseRestaurant.Services
 {
-    public class EmailSender : IEmailSender
+    public class EmailSender : IMailSender
     {
-        public EmailOptions Options { get; set; }
-
-        public EmailSender(IOptions<EmailOptions> emailOptions)
+        public  void SendEmailAsync(string email, string subject, string message)
         {
-            Options = emailOptions.Value;
-        }
-        public  Task SendEmailAsync(string email, string subject, string message)
-        {
-            return  Execute(Options.SendGridKey, subject, message, email);
+             Execute(email,subject, message);
         }
 
-        private Task Execute(string sendGridKey, string subject, string message, string email)
+        private void Execute(string email, string subject, string msg)
         {
-            var client = new SendGridClient(sendGridKey);
-            var msg = new SendGridMessage()
-            {
-                From = new EmailAddress("admin@universe.com", "Universe Restaurant"),
-                Subject = subject,
-                PlainTextContent = message,
-                HtmlContent = message
-            };
+            MimeMessage message = new MimeMessage();
+            message.From.Add(new MailboxAddress("Universe*Restaurant", "univer.restaurant@gmail.com"));
+            message.To.Add(new MailboxAddress(email));
+            message.Subject = subject;
+            message.Body = new BodyBuilder() { HtmlBody = msg }.ToMessageBody();
 
-            msg.AddTo(new EmailAddress(email));
-            
-            
-            try
+            using (MailKit.Net.Smtp.SmtpClient client = new MailKit.Net.Smtp.SmtpClient())
             {
-                return client.SendEmailAsync(msg);
-            }
-            catch (Exception ex)
-            {
+                client.Connect("smtp.gmail.com", 465, true); 
+                client.Authenticate("univer.restaurant@gmail.com", "Admin123*");
+                client.Send(message);
 
-            }
-            return null;
+                client.Disconnect(true);            
+            }           
         }
     }
 }
